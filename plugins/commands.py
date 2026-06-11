@@ -61,11 +61,11 @@ async def start(client, message):
     if len(message.command) != 2:
  buttons = [
             [
-                InlineKeyboardButton('🔍 SUPPORT GROUP', url='https://t.me/+ezcJRKI_yQcwMjA9'),
-                InlineKeyboardButton('🤖 UPDATE CHANNEL', url='https://t.me/+W0znQsN7HyAzNzU1')
+                InlineKeyboardButton('👥 ꜱᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ', url='https://t.me/+ezcJRKI_yQcwMjA9'),
+                InlineKeyboardButton('🎬 ᴜᴘᴅᴀᴛᴇꜱ ᴄʜᴀɴɴᴇʟ', url='https://t.me/+W0znQsN7HyAzNzU1')
             ],
             [
-                InlineKeyboardButton('🤷‍♀️ HELP', callback_data='help')
+                InlineKeyboardButton('❓ ʜᴇʟᴘ', callback_data='help')
             ]
  ]
         if CLONE_MODE == True:
