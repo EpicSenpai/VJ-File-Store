@@ -1,7 +1,3 @@
-# Don't Remove Credit Tg - @VJ_Bots
-# Subscribe YouTube Channel For Amazing Bot https://youtube.com/@Tech_VJ
-# Ask Doubt on telegram @KingVJ01
-
 from pyrogram.errors import InputUserDeactivated, UserNotParticipant, FloodWait, UserIsBlocked, PeerIdInvalid
 from plugins.dbusers import db
 from pyrogram import Client, filters
@@ -9,10 +5,6 @@ from config import ADMINS
 import asyncio
 import datetime
 import time
-
-# Don't Remove Credit Tg - @VJ_Bots
-# Subscribe YouTube Channel For Amazing Bot https://youtube.com/@Tech_VJ
-# Ask Doubt on telegram @KingVJ01
 
 async def broadcast_messages(user_id, message):
     try:
@@ -33,16 +25,11 @@ async def broadcast_messages(user_id, message):
     except Exception as e:
         return False, "Error"
 
-# Don't Remove Credit Tg - @VJ_Bots
-# Subscribe YouTube Channel For Amazing Bot https://youtube.com/@Tech_VJ
-# Ask Doubt on telegram @KingVJ01
-
-
 @Client.on_message(filters.command("broadcast") & filters.user(ADMINS) & filters.reply)
 async def verupikkals(bot, message):
     users = await db.get_all_users()
     b_msg = message.reply_to_message
-    sts = await message.reply_text(text='**Broadcasting your messages...**')
+    sts = await message.reply_text(text='**ʙʀᴏᴀᴅᴄᴀsᴛɪɴɢ ʏᴏᴜʀ ᴍᴇssᴀɢᴇs...**')
     start_time = time.time()
     total_users = await db.total_users_count()
     done = 0
@@ -50,10 +37,6 @@ async def verupikkals(bot, message):
     deleted = 0
     failed = 0
     success = 0
-
-# Don't Remove Credit Tg - @VJ_Bots
-# Subscribe YouTube Channel For Amazing Bot https://youtube.com/@Tech_VJ
-# Ask Doubt on telegram @KingVJ01
 
     async for user in users:
         if 'id' in user:
@@ -70,23 +53,18 @@ async def verupikkals(bot, message):
             done += 1
             if not done % 20:
                 try:
-                    await sts.edit(f"Broadcast in progress:\n\nTotal Users {total_users}\nCompleted: {done} / {total_users}\nSuccess: {success}\nBlocked: {blocked}\nDeleted: {deleted}")
+                    await sts.edit(f"<b>ʙʀᴏᴀᴅᴄᴀsᴛ ɪɴ ᴘʀᴏɢʀᴇss:</b>\n\n<b>ᴛᴏᴛᴀʟ ᴜsᴇʀs:</b> {total_users}\n<b>ᴄᴏᴍᴘʟᴇᴛᴇᴅ:</b> {done} / {total_users}\n<b>sᴜᴄᴄᴇss:</b> {success}\n<b>ʙʟᴏᴄᴋᴇᴅ:</b> {blocked}\n<b>ᴅᴇʟᴇᴛᴇᴅ:</b> {deleted}")
                 except:
                     pass
         else:
-            # Handle the case where 'id' key is missing in the user dictionary
             done += 1
             failed += 1
             if not done % 20:
                 try:
-                    await sts.edit(f"Broadcast in progress:\n\nTotal Users {total_users}\nCompleted: {done} / {total_users}\nSuccess: {success}\nBlocked: {blocked}\nDeleted: {deleted}")
+                    await sts.edit(f"<b><b>ʙʀᴏᴀᴅᴄᴀsᴛ ɪɴ ᴘʀᴏɢʀᴇss:</b></b>\n\n<b><b>ᴛᴏᴛᴀʟ ᴜsᴇʀs:</b></b> {total_users}\n<b><b>ᴄᴏᴍᴘʟᴇᴛᴇᴅ:</b></b> {done} / {total_users}\n<b><b>sᴜᴄᴄᴇss:</b></b> {success}\n<b><b>ʙʟᴏᴄᴋᴇᴅ:</b></b> {blocked}\n<b><b>ᴅᴇʟᴇᴛᴇᴅ:</b></b> {deleted}")
                 except:
                     pass
     
     time_taken = datetime.timedelta(seconds=int(time.time()-start_time))
-    await sts.edit(f"Broadcast Completed:\nCompleted in {time_taken} seconds.\n\nTotal Users {total_users}\nCompleted: {done} / {total_users}\nSuccess: {success}\nBlocked: {blocked}\nDeleted: {deleted}")
-
-# Don't Remove Credit Tg - @VJ_Bots
-# Subscribe YouTube Channel For Amazing Bot https://youtube.com/@Tech_VJ
-# Ask Doubt on telegram @KingVJ01
-
+    await sts.edit(f"<b>ʙʀᴏᴀᴅᴄᴀsᴛ ᴄᴏᴍᴘʟᴇᴛᴇᴅ:</b>\n<b>ᴄᴏᴍᴘʟᴇᴛᴇᴅ ɪɴ</b> {time_taken} <b>sᴇᴄᴏɴᴅs.</b>\n\n<b>ᴛᴏᴛᴀʟ ᴜsᴇʀs:</b> {total_users}\n<b><b>ᴄᴏᴍᴘʟᴇᴛᴇᴅ:</b></b> {done} / {total_users}\n<b>sᴜᴄᴄᴇss:</b> {success}\n<b>ʙʟᴏᴄᴋᴇᴅ:</b> {blocked}\n<b>ᴅᴇʟᴇᴛᴇᴅ:</b> {deleted}")
+    
