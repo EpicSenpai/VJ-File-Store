@@ -58,16 +58,16 @@ async def start(client, message):
     if not await db.is_user_exist(message.from_user.id):
         await db.add_user(message.from_user.id, message.from_user.first_name)
         await client.send_message(LOG_CHANNEL, script.LOG_TEXT.format(message.from_user.id, message.from_user.mention))
-    if len(message.command) != 2:
-buttons = [
-            [
-                InlineKeyboardButton('👥 ꜱᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ', url='https://t.me/+ezcJRKI_yQcwMjA9'),
-                InlineKeyboardButton('🎬 ᴜᴘᴅᴀᴛᴇꜱ ᴄʜᴀɴɴᴇʟ', url='https://t.me/+W0znQsN7HyAzNzU1')
-            ],
-            [
-                InlineKeyboardButton('🤷‍♀️ HELP', callback_data='help')
+        if len(message.command) != 2:
+            buttons = [
+                [
+                    InlineKeyboardButton('👥 ꜱᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ', url='https://t.me/+ezcJRKI_yQcwMjA9'),
+                    InlineKeyboardButton('🎬 ᴜᴘᴅᴀᴛᴇꜱ ᴄʜᴀɴɴᴇʟ', url='https://t.me/+W0znQsN7HyAzNzU1')
+                ],
+                [
+                    InlineKeyboardButton('❓ ʜᴇʟᴘ', callback_data='help')
+                ]
             ]
-        ]
 
         if CLONE_MODE == True:
             buttons.append([InlineKeyboardButton('🤖 ᴄʀᴇᴀᴛᴇ ʏᴏᴜʀ ᴏᴡɴ ᴄʟᴏɴᴇ ʙᴏᴛ', callback_data='clone')])
