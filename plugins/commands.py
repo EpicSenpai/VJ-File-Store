@@ -37,24 +37,5 @@ def formate_file_name(file_name):
     chars = ["[", "]", "(", ")"]
     for c in chars:
         file_name.replace(c, "")
-    file_name = '@VJ_Botz ' + ' '.join(filter(lambda x: not x.startswith('http') and not x.startswith('@') and not x.startswith('www.'), file_name.split()))
-    return file_name
-
-# ==================== FIX FIXED START COMMAND ====================
-@Client.on_message(filters.command("start") & filters.incoming)
-async def start(client, message):
-    username = client.me.username
+    file_name = '@VJ_Botz ' + ' '.join(filter(lambda x: not x.startswith('http
     
-    # User ko database me add karna (bina errors ke)
-    if not await db.is_user_exist(message.from_user.id):
-        try:
-            await db.add_user(message.from_user.id, message.from_user.first_name)
-            await client.send_message(LOG_CHANNEL, f"#NewUser\nID: <code>{message.from_user.id}</code>\nName: {message.from_user.mention}")
-        except:
-            pass
-
-    # Agar user ne normal /start bheja hai (bina kisi file link ke)
-    if len(message.command) == 1:
-        return await message.reply_text(
-            text=f
-            
