@@ -66,5 +66,77 @@ async def gen_link_s(bot, message):
 async def gen_link_batch(bot, message):
     username = (await bot.get_me()).username
     if " " not in message.text:
-        return await message.reply("<b>ᴜsᴇ ᴄᴏʀʀᴇᴄ
-                                   
+        return await message.reply("<b>uꜱᴇ ᴄᴏʀʀᴇᴄᴛ ꜰᴏʀᴍᴀᴛ.\nᴇxᴀᴍᴘʟᴇ /batch ʜᴛᴛᴘs://ᴛ.ᴍᴇ/ᴄʜᴀᴛ/10 ʜᴛᴛᴘs://ᴛ.ᴍᴇ/ᴄʜᴀᴛ/20</b>")
+    links = message.text.strip().split(" ")
+    if len(links) != 3:
+        return await message.reply("<b>u<b>sᴇ ᴄᴏʀʀᴇᴄᴛ ꜰᴏʀᴍᴀᴛ.\nᴇxᴀᴍᴘʟᴇ /batch ʜᴛᴛᴘs://ᴛ.ᴍᴇ/ᴄʜᴀᴛ/10 ʜᴛᴛᴘs://ᴛ.ᴍᴇ/ᴄʜᴀᴛ/20</b></b>")
+    cmd, first, last = links
+    regex = re.compile("(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$")
+    match = regex.match(first)
+    if not match:
+        return await message.reply('<b>ɪɴᴠᴀʟɪᴅ ʟɪɴᴋ</b>')
+    f_chat_id = match.group(4)
+    f_msg_id = int(match.group(5))
+    if f_chat_id.isnumeric():
+        f_chat_id = int(("-100" + f_chat_id))
+    
+    match = regex.match(last)
+    if not match:
+        return await message.reply('<b>ɪɴᴠᴀʟɪᴅ ʟɪɴᴋ</b>')
+    l_chat_id = match.group(4)
+    l_msg_id = int(match.group(5))
+    if l_chat_id.isnumeric():
+        l_chat_id = int(("-100" + l_chat_id))
+
+    if f_chat_id != l_chat_id:
+        return await message.reply("<b>ᴄʜᴀᴛ ɪᴅs ɴᴏᴛ ᴍᴀᴛᴄʜᴇᴅ.</b>")
+    try:
+        chat_id = (await bot.get_chat(f_chat_id)).id
+    except ChannelInvalid:
+        return await message.reply('<b>ᴛʜɪs ᴍᴀʏ ʙᴇ ᴀ ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀɴɴᴇʟ / ɢʀᴏᴜᴘ. ᴍᴀᴋᴇ ᴍᴇ ᴀɴ ᴀᴅᴍɪɴ ᴏᴠᴇʀ ᴛʜᴇʀᴇ ᴛᴏ ɪɴᴅᴇx ᴛʜᴇ ғɪʟᴇs.</b>')
+    except (UsernameInvalid, UsernameNotModified):
+        return await message.reply('<b>ɪɴᴠᴀʟɪᴅ ʟɪɴᴋ sᴘᴇᴄɪғɪᴇᴅ.</b>')
+    except Exception as e:
+        return await message.reply(f'<b>ᴇʀʀᴏʀs - {e}</b>')
+    
+    sts = await message.reply("<b>🔺 ɢᴇɴᴇʀᴀᴛɪɴɢ ʟɪɴᴋ...</b>")
+
+    FRMT = "<b>ɢᴇɴᴇʀᴀᴛɪɴɢ ʟɪɴᴋ...</b>\n\n<b>ᴛᴏᴛᴀʟ ᴍᴇssᴀɢᴇs:</b> {total}\n<b>ᴅᴏɴᴇ:</b> {current}\n<b>ʀᴇᴍᴀɪɴɪɴɢ:</b> {rem}\n<b>sᴛᴀᴛᴜs:</b> {sts}"
+
+    outlist = []
+    og_msg = 0
+    tot = 0
+    async for msg in bot.iter_messages(f_chat_id, l_msg_id, f_msg_id):
+        tot += 1
+        if og_msg % 20 == 0:
+            try:
+                await sts.edit(FRMT.format(total=l_msg_id-f_msg_id, current=tot, rem=((l_msg_id-f_msg_id) - tot), sts="sᴀᴠɪɴɢ ᴍᴇssᴀɢᴇs"))
+            except:
+                pass
+        if msg.empty or msg.service:
+            continue
+        file = {
+            "channel_id": f_chat_id,
+            "msg_id": msg.id
+        }
+        og_msg +=1
+        outlist.append(file)
+
+    with open(f"batchmode_{message.from_user.id}.json", "w+") as out:
+        json.dump(outlist, out)
+    post = await bot.send_document(LOG_CHANNEL, f"batchmode_{message.from_user.id}.json", file_name="Batch.json", caption="⚠️ ʙᴀᴛᴄʜ ɢᴇɴᴇʀᴀᴛᴇded ғᴏʀ ғɪʟᴇsᴛᴏʀᴇ.")
+    os.remove(f"batchmode_{message.from_user.id}.json")
+    string = str(post.id)
+    file_id = base64.urlsafe_b64encode(string.encode("ascii")).decode().strip("=")
+    user_id = message.from_user.id
+    user = await get_user(user_id)
+    if WEBSITE_URL_MODE == True:
+        share_link = f"{WEBSITE_URL}?share=BATCH-{file_id}"
+    else:
+        share_link = f"https://t.me/{username}?start=BATCH-{file_id}"
+    if user["base_site"] and user["shortener_api"] != None:
+        short_link = await get_short_link(user, share_link)
+        await sts.edit(f"<b>⭕ ʜᴇʀᴇ ɪs ʏᴏᴜʀ ʟɪɴᴋ:\n\ncontains `{og_msg}` files.\n\n🖇️ sʜᴏʀᴛ ʟɪɴᴋ :- {short_link}</b>")
+    else:
+        await sts.edit(f"<b>⭕ ʜᴇʀᴇ ɪs ʏᴏᴜʀ ʟɪɴᴋ:\n\ncontains `{og_msg}` files.\n\n🔗 ᴏʀɪɢɪɴᴀʟ ʟɪɴᴋ :- {share_link}</b>")
+    
