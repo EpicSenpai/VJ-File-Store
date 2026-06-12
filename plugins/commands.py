@@ -9,13 +9,15 @@ from plugins.users_api import get_user
 @Client.on_message(filters.command(['start']) & filters.private)
 async def start_command(bot: Client, message: Message):
     user_id = message.from_user.id
-    await get_user(user_id) # Ensure user is in DB
+    try:
+        await get_user(user_id) # Ensure user setup
+    except:
+        pass
     
     b1 = InlineKeyboardButton('👥 sᴜᴩᴩᴏʀᴛ ɢʀᴏᴜᴩ', url='https://t.me/+ezcJRKI_yQcwMjA9')
     b2 = InlineKeyboardButton('🎬 ᴜᴩᴅᴀᴛᴇs ᴄʜᴀɴɴᴇʟ', url='https://t.me/+W0znQsN7HyAzNzU1')
     b3 = InlineKeyboardButton('❓ ʜᴇʟᴩ', callback_data='help')
     b4 = InlineKeyboardButton('😊 ᴀʙᴏᴜᴛ', callback_data='about')
-    
     reply_markup = InlineKeyboardMarkup([[b1, b2], [b3, b4]])
     
     if PICS:
@@ -27,7 +29,6 @@ async def start_command(bot: Client, message: Message):
                 parse_mode=enums.ParseMode.HTML
             )
         except Exception as e:
-            logging.error(f"Error sending photo: {e}")
             await message.reply_text(
                 text=script.START_TXT.format(message.from_user.mention),
                 reply_markup=reply_markup,
@@ -42,7 +43,7 @@ async def start_command(bot: Client, message: Message):
 
 @Client.on_callback_query()
 async def cb_handler(client: Client, query: CallbackQuery):
-    await query.answer() # Stops the loading/clock icon instantly
+    await query.answer()
     
     if query.data == "close_data":
         await query.message.delete()
@@ -53,7 +54,12 @@ async def cb_handler(client: Client, query: CallbackQuery):
             InlineKeyboardButton('🔒 ᴄʟᴏsᴇ', callback_data='close_data')
         ]]
         reply_markup = InlineKeyboardMarkup(buttons)
-        await query.message.edit_text(
+        try:
+            await query.message.delete()
+        except:
+            pass
+        await client.send_message(
+            chat_id=query.message.chat.id,
             text=script.ABOUT_TXT.format((await client.get_me()).mention),
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML,
@@ -66,7 +72,12 @@ async def cb_handler(client: Client, query: CallbackQuery):
             InlineKeyboardButton('🔒 ᴄʟᴏsᴇ', callback_data='close_data')
         ]]
         reply_markup = InlineKeyboardMarkup(buttons)
-        await query.message.edit_text(
+        try:
+            await query.message.delete()
+        except:
+            pass
+        await client.send_message(
+            chat_id=query.message.chat.id,
             text=script.HELP_TXT,
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
@@ -75,4 +86,26 @@ async def cb_handler(client: Client, query: CallbackQuery):
     elif query.data == "start":
         b1 = InlineKeyboardButton('👥 sᴜᴩᴩᴏʀᴛ ɢʀᴏᴜᴩ', url='https://t.me/+ezcJRKI_yQcwMjA9')
         b2 = InlineKeyboardButton('🎬 ᴜᴩᴅᴀᴛᴇs ᴄʜᴀɴɴᴇʟ', url='https://t.me/+W0znQsN7HyAzNzU1')
-        
+        b3 = InlineKeyboardButton('❓ ʜᴇʟᴩ', callback_data='help')
+        b4 = InlineKeyboardButton('😊 ᴀʙᴏᴜᴛ', callback_data='about')
+        reply_markup = InlineKeyboardMarkup([[b1, b2], [b3, b4]])
+        try:
+            await query.message.delete()
+        except:
+            pass
+        if PICS:
+            await client.send_photo(
+                chat_id=query.message.chat.id,
+                photo=PICS[0],
+                caption=script.START_TXT.format(query.from_user.mention),
+                reply_markup=reply_markup,
+                parse_mode=enums.ParseMode.HTML
+            )
+        else:
+            await client.send_message(
+                chat_id=query.message.chat.id,
+                text=script.START_TXT.format(query.from_user.mention),
+                reply_markup=reply_markup,
+                parse_mode=enums.ParseMode.HTML
+            )
+            
