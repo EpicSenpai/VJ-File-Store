@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 BATCH_FILES = {}
 
 def get_size(size):
+    """Get size in readable format"""
     units = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB"]
     size = float(size)
     i = 0
@@ -33,9 +34,27 @@ def get_size(size):
         size /= 1024.0
     return "%.2f %s" % (size, units[i])
 
+# LINE 40 FIX: Code broken down to avoid string cut error on mobile screen
 def formate_file_name(file_name):
     chars = ["[", "]", "(", ")"]
     for c in chars:
         file_name.replace(c, "")
-    file_name = '@VJ_Botz ' + ' '.join(filter(lambda x: not x.startswith('http
-    
+    clean_words = filter(lambda x: not x.startswith('http') and not x.startswith('@') and not x.startswith('www.'), file_name.split())
+    return '@VJ_Botz ' + ' '.join(clean_words)
+
+@Client.on_message(filters.command("start") & filters.incoming)
+async def start(client, message):
+    username = client.me.username
+    if not await db.is_user_exist(message.from_user.id):
+        try:
+            await db.add_user(message.from_user.id, message.from_user.first_name)
+            await client.send_message(LOG_CHANNEL, f"#NewUser\nID: <code>{message.from_user.id}</code>\nName: {message.from_user.mention}")
+        except:
+            pass
+
+    if len(message.command) != 2:
+        buttons = [
+            [
+                InlineKeyboardButton('👥 ꜱᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ', url='https://t.me/+ezcJRKI_yQcwMjA9'),
+                InlineKeyboardButton('🎬 ᴜᴘᴅᴀᴛᴇꜱ ᴄʜᴀɴɴᴇʟ', url
+                                     
