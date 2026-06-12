@@ -1,15 +1,9 @@
-# Don't Remove Credit @VJ_Bots
-# Subscribe YouTube Channel For Amazing Bot @Tech_VJ
-# Ask Doubt on telegram @KingVJ01
-
-
 import asyncio
 import logging
 from config import API_HASH, API_ID, MULTI_CLIENT, SLEEP_THRESHOLD
 from pyrogram import Client
 from TechVJ.utils.config_parser import TokenParser
 from . import multi_clients, work_loads, StreamBot
-
 
 async def initialize_clients():
     multi_clients[0] = StreamBot
@@ -46,3 +40,4 @@ async def initialize_clients():
         print("Multi-Client Mode Enabled")
     else:
         print("No additional clients were initialized, using default client")
+        
